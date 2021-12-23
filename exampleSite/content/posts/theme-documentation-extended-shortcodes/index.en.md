@@ -529,18 +529,20 @@ The basic chart types ECharts supports include [line series](https://echarts.apa
 
 See the [echarts gallery](https://echarts.apache.org/examples/en/index.html) for inspiration on what you can do with echarts.
 
-You have two shortcodes to use echarts:
+You have two approaches to use echarts:
 
-|Shortcode|Simplicity|JavaScript|Inclusion|Chart reuse|
+|Mode|Simplicity|JavaScript|Chart reuse|
 |:-:|:-:|:-:|:-:|:-:|
-|`echarts`|:thumbs_up::thumbs_up:|:x:|Inline|:x:|
-|`echarts_file`|:thumbs_up:|:white_check_mark:|Separate file|:white_check_mark:|
+|Inline|:thumbs_up::thumbs_up:|:x:|:x:|
+|Standalone|:thumbs_up:|:white_check_mark:|:white_check_mark:|
 
-Don't use a mix of `echarts` and `echarts_file` within the same page.
+You can safely mix both modes in a page.
 
-### Using the `echarts` shortcode
+### Using `echarts` Inline
 
-In this setup, you pass the chart configuration *inline* to the shortcode, in `JSON`, `YAML` or `TOML` format. Notice that this prevents you from using JavaScript functions in your chart -- which are occasionally useful for visualMaps or data transformation.
+In this mode, you pass the chart configuration *inline* to the shortcode, in `JSON`, `YAML` or `TOML` format. The recommended format is `JSON` as it's closest to the examples in the (echarts gallery)[https://echarts.apache.org/examples/en/index.html].
+
+{{< admonition type=warning >}}:warning: This mode prevents you from using JavaScript within your chart, which is occasionally useful for visualMaps or data transformation.{{< /admonition >}}
 
 Example `echarts` input in `JSON` format:
 
@@ -680,11 +682,13 @@ The rendered output looks like this:
 }
 {{< /echarts >}}
 
-### Using the `echarts_file` shortcode
+### Using `echarts` Standalone
 
-With this shortcode, you store the chart definition in an own file, and then reference this file within your post.
+In this mode you store the chart definition in an own file, and then reference this file within your post.
 
-It allows you to:
+{{< admonition type=warning >}}:warning: This mode requires you to format chart specifications in JavaScript format, which is the format used for all official examples in the [echarts gallery](https://echarts.apache.org/examples/en/index.html).{{< /admonition >}}
+
+This mode allows you to:
 
 - Reuse a chart multiple times, without having to repeat the code.
 - Use JavaScript in your charts -- which is necessary for various transformations and visualMaps.
@@ -693,9 +697,9 @@ It allows you to:
 To use this method proceed as follows:
 
 1. Create a `charts/` folder under your blog's `content/` folder.
-2. Store your chart configuration in a file `content/charts/my_chart.mjs`.
-3. Format your chart configuration in **JavaScript notation** (not JSON like in the inline case above), and prepend your definition with `export const option = { /* your chart definition here */ }`
-4. Include your chart in your blog post with `{{</* echarts "charts/my_chart.mjs" */>}}`.
+2. Store your chart configuration in a file `content/charts/my_chart.mjs`. Use a representative filename for the chart.
+3. Format your chart configuration in **JavaScript notation** (not JSON like in the inline case above!), and prepend your definition with `export const option = { /* your chart definition here */ }`
+4. Include your chart in your blog post with `{{</* echarts file="charts/my_chart.mjs" */>}}`. **No closing tag** in this mode!
 
 There you go. Compilation will fail if the chart file is missing altogether, but it'll work if it's present but contains mistakes. If those mistakes prevent the graph front rendering, you'll see a loading error message in your page itself.
 
@@ -703,17 +707,21 @@ There you go. Compilation will fail if the chart file is missing altogether, but
 
 Build your graphs faster by picking an example from the [echarts gallery](https://echarts.apache.org/examples/en/index.html), and use the interactive editor to quickly adapt it to your desired graph. When you're done, you can copy the resulting graph specification and paste it over into the uBlogger shortcode.
 
-If you're using the `echarts_file` shortcode, simply copy the code into your chart.mjs file, and prepend `export` to your definition.
+If you're using the shortcode in *standalone mode*, simply copy the code into your chart.mjs file, and prepend `export` to your definition.
 
-If, instead, you're using the `echarts` shortcode, make sure to [convert your syntax to JSON](https://www.convertsimple.com/convert-json-to-javascript/), remove the `option =` prefix, and remove the `;` suffix trailing the chart specification.
+If, instead, you're using the shortcode in *inline mode*, then make sure to adjust your syntax:
 
-Both `echarts` and `echarts_file` shortcodes also support the following named parameters:
+1. convert your syntax to JSON, e.g. with this [JavaScript to JSON converter](https://www.convertsimple.com/convert-json-to-javascript/)
+2. remove the `option =` prefix
+3. remove the `;` suffix trailing the chart specification.
 
-* **width** *[optional]* (**first** positional parameter in `echarts`; second position parameter in `echarts_file`)
+The `echarts` shortcode also support the following named parameters, in both modes:
+
+* **width** *[optional]* (**first** positional parameter)
 
     {{< version 0.2.0 >}} Width of the data visualization, default value is `100%`.
 
-* **height** *[optional]* (**second** positional parameter in `echarts`; third positional parameter in `echarts_file`)
+* **height** *[optional]* (**second** positional parameter)
 
     {{< version 0.2.0 >}} Height of the data visualization, default value is `30rem`.
 
