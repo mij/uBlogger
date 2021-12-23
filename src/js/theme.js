@@ -93,7 +93,9 @@ class Theme {
                 }
                 this.isDark = !this.isDark;
                 window.localStorage && localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
-                window.REMARK42.changeTheme(document.body.getAttribute('theme') === 'dark' ? 'dark' : 'light');
+                if (typeof window.REMARK42 !== 'undefined') {
+                    window.REMARK42.changeTheme(document.body.getAttribute('theme') === 'dark' ? 'dark' : 'light');
+                }
                 for (let event of this.switchThemeEventSet) event();
             }, false);
         });
@@ -462,8 +464,20 @@ class Theme {
             }
             this._echartsArr = [];
             this.util.forEach(document.getElementsByClassName('echarts'), $echarts => {
+                $echarts.innerHTML = '';
+                let filename = $echarts.dataset.filename;
                 const chart = echarts.init($echarts, this.isDark ? 'dark' : 'macarons', {renderer: 'svg'});
-                chart.setOption(JSON.parse(this.data[$echarts.id]));
+                if (! filename) {
+                    // has chart config stored in some element ID as JSON
+                    chart.setOption(JSON.parse(this.data[$echarts.id]));
+                } else {
+                    // has data-filename attribute => load chart config from external file
+                    import(filename).then(module => {
+                        chart.setOption(module.option);
+                    }).catch((err) => {
+                        console.error("While loading eChart for " + filename + ": " + err);
+                    })
+                }
                 this._echartsArr.push(chart);
             });
         });
