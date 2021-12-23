@@ -701,11 +701,11 @@ To use this method proceed as follows:
 3. Format your chart configuration in **JavaScript notation** (not JSON like in the inline case above!), and prepend your definition with `export const option = { /* your chart definition here */ }`
 4. Include your chart in your blog post with `{{</* echarts file="charts/my_chart.mjs" */>}}`. **No closing tag** in this mode!
 
-There you go. Compilation will fail if the chart file is missing altogether, but it'll work if it's present but contains mistakes. If those mistakes prevent the graph front rendering, you'll see a loading error message in your page itself.
+There you go. Compilation will fail if the chart file is missing altogether, but it'll work if it's present but contains mistakes. If those mistakes prevent the chart front rendering, you'll see a loading error message in your page itself.
 
 ### Pro tip
 
-Build your graphs faster by picking an example from the [echarts gallery](https://echarts.apache.org/examples/en/index.html), and use the interactive editor to quickly adapt it to your desired graph. When you're done, you can copy the resulting graph specification and paste it over into the uBlogger shortcode.
+Build your chart faster by picking an example from the [echarts gallery](https://echarts.apache.org/examples/en/index.html), and use the interactive editor to quickly adapt it to your desired chart. When you're done, you can copy the resulting chart specification and paste it over into the uBlogger shortcode.
 
 If you're using the shortcode in *standalone mode*, simply copy the code into your chart.mjs file, and prepend `export` to your definition.
 
